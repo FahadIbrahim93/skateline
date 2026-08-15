@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>SKATELINE</title>
+<style>
+:root{--accent:#e85d04;--ui:#fff}*{margin:0;padding:0;box-sizing:border-box;touch-action:none;user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a1420;font-family:system-ui,sans-serif;color:var(--ui)}
+canvas{display:block}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:2;text-shadow:0 2px 6px rgba(0,0,0,.5)}
+#score{position:absolute;top:24px;left:24px;font-size:1.5rem;font-weight:800}
+#combo{font-size:.75rem;color:var(--accent);opacity:0;margin-top:2px;font-weight:700}#combo.visible{opacity:1}
+#speed{position:absolute;bottom:36px;left:24px;font-size:2.4rem;font-weight:700}#speed small{font-size:.85rem;opacity:.7}
+#flow-container{position:absolute;bottom:32px;right:24px;width:80px;text-align:center}
+#flow-ring{width:80px;height:80px;display:block}#flow-label{font-size:.7rem;letter-spacing:.1em;opacity:.8;margin-top:2px}
+#message{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:2.4rem;font-weight:800;opacity:0;transition:opacity .2s}#message.visible{opacity:1}
+#hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:.72rem;opacity:.5}body.is-touch #hint{display:none}
+#touch-layer{position:absolute;inset:0;pointer-events:none;display:none;z-index:3}body.is-touch #touch-layer{display:block}
+#lean-zone{position:absolute;left:0;top:0;width:65%;height:100%;pointer-events:auto}
+.control-btn{position:absolute;width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;pointer-events:auto}
+.control-btn.active{background:rgba(255,255,255,.35);transform:scale(.94)}
+#btn-ollie{bottom:24px;right:24px}#btn-grab{bottom:24px;right:104px}#btn-push{bottom:104px;right:24px}#btn-crouch{bottom:104px;right:104px}
+#btn-restart{display:none;position:absolute;bottom:30%;left:50%;transform:translateX(-50%);width:150px;height:48px;border-radius:24px;font-size:.85rem}
+body.is-touch.wiped #btn-restart{display:flex}
+#pause-btn{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:#fff;font-weight:800;display:none;z-index:6;cursor:pointer}
+body.game-live #pause-btn{display:block}
+#start-screen,#pause-screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(6,14,26,.6),rgba(6,14,26,.85));z-index:10;text-align:center}
+#pause-screen{display:none}
+.start-inner,.pause-inner{display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}
+h1{font-size:clamp(2.2rem,7vw,3.2rem);font-weight:900;letter-spacing:.08em}
+.tagline{opacity:.75;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin-top:-8px}
+#drop-in-btn,#resume-btn,#restart-run-btn{padding:12px 36px;border-radius:26px;background:var(--accent);border:none;color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;pointer-events:auto}
+#restart-run-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.35)}
+.controls-hint{font-size:.68rem;opacity:.55}
+</style>
+</head>
+<body>
+<div id="ui"><div id="score">0</div><div id="combo">COMBO</div><div id="speed">0 <small>km/h</small></div><div id="flow-container"><canvas id="flow-ring" width="80" height="80"></canvas><div id="flow-label">FLOW</div></div><div id="message"></div><div id="hint">W Push · A/D Lean · Space Ollie · Shift Grab · Ctrl Crouch · R Respawn · P Pause</div></div>
+<div id="touch-layer"><div id="lean-zone"></div><button class="control-btn" id="btn-ollie">OLLIE</button><button class="control-btn" id="btn-grab">GRAB</button><button class="control-btn" id="btn-push">PUSH</button><button class="control-btn" id="btn-crouch">CROUCH</button><button class="control-btn" id="btn-restart">RESTART</button></div>
+<button id="pause-btn">II</button>
+<div id="start-screen"><div class="start-inner"><h1>SKATELINE</h1><p class="tagline">Hybrid free-roam skate</p><button id="drop-in-btn">DROP IN</button><p class="controls-hint">Push, ollie, grind rails, chain combos</p></div></div>
+<div id="pause-screen"><div class="pause-inner"><h2>PAUSED</h2><button id="resume-btn">RESUME</button><button id="restart-run-btn">END RUN</button></div></div>
+<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js" } }</script>
+<script type="module" src="./game.js"></script>
+</body>
+</html>
