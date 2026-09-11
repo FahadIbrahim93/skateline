@@ -53,15 +53,17 @@ const truckM=M(0x9a9aa2,0.3,0.7),wheelM=M(0x222226,0.5);
 scene.add(player);player.visible=false;
 }
 function init(){
+const isTouch=(navigator.maxTouchPoints>0)||("ontouchstart" in window);
+if(isTouch)document.body.classList.add("is-touch");
 scene=new THREE.Scene();scene.background=new THREE.Color(0x5a8ab8);scene.fog=new THREE.Fog(0x5a8ab8,48,125);
 camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,0.1,220);
-renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
-renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.75));
-renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.appendChild(renderer.domElement);
+renderer=new THREE.WebGLRenderer({antialias:!isTouch,powerPreference:"high-performance"});
+renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(isTouch?1:Math.min(devicePixelRatio||1,1.75));
+renderer.shadowMap.enabled=!isTouch;if(!isTouch)renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight(0xc8e0ff,0x3a4a3a,0.55));
-const sun=new THREE.DirectionalLight(0xfff0d8,1.45);sun.position.set(50,65,35);sun.castShadow=true;
-sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.near=5;sun.shadow.camera.far=160;
-sun.shadow.camera.left=sun.shadow.camera.bottom=-55;sun.shadow.camera.right=sun.shadow.camera.top=55;sun.shadow.bias=-0.0004;scene.add(sun);
+const sun=new THREE.DirectionalLight(0xfff0d8,isTouch?1.2:1.45);sun.position.set(50,65,35);sun.castShadow=!isTouch;
+if(!isTouch){sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.near=5;sun.shadow.camera.far=160;
+sun.shadow.camera.left=sun.shadow.camera.bottom=-55;sun.shadow.camera.right=sun.shadow.camera.top=55;sun.shadow.bias=-0.0004}scene.add(sun);
 buildWorld();buildPlayer();
 window.addEventListener("keydown",e=>{S.keys[e.code]=true;if(e.code==="KeyR"&&S.started&&!S.alive)respawn();if((e.code==="KeyP"||e.code==="Escape")&&S.started)togglePause()});
 window.addEventListener("keyup",e=>{S.keys[e.code]=false});
